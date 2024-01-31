@@ -19,14 +19,11 @@ class ChestXRayApp(QMainWindow):
 
     def initUI(self):
         layout = QVBoxLayout()
-
         training_group = QGroupBox("Eğitim")
         training_layout = QVBoxLayout()
-        # Eğitim butonu
         self.train_button = QPushButton("Eğitim Başlat")
         self.train_button.clicked.connect(self.train_model)
         training_layout.addWidget(self.train_button)
-        # İlerleme çubuğu
         self.progress_bar = QProgressBar(self)
         self.progress_bar.setMaximum(100)  # Maksimum değer
         self.progress_bar.setAlignment(Qt.AlignCenter)
@@ -37,11 +34,9 @@ class ChestXRayApp(QMainWindow):
         layout.addWidget(training_group)
         image_processing_group = QGroupBox("Görüntü İşleme")
         image_processing_layout = QVBoxLayout()
-        # Test butonu ve görüntü seçme
         self.test_button = QPushButton("Görüntü Seç ve Test Et")
         self.test_button.clicked.connect(self.select_image)
         image_processing_layout.addWidget(self.test_button)
-        # Resmi gösterme
         self.image_label = ClickableLabel()
         self.image_label.setAlignment(Qt.AlignCenter)  # İçeriği ortalar
         pixmap = QPixmap("default/defaultXray.png")  # Varsayılan resmi yükler
@@ -49,20 +44,17 @@ class ChestXRayApp(QMainWindow):
         self.image_label.setPixmap(pixmap)
         self.image_label.clicked.connect(self.select_image)
         image_processing_layout.addWidget(self.image_label)
-        # Sonuç gösterme
         self.result_label = QLabel("Sonuçlar burada gösterilecek.")
         image_processing_layout.addWidget(self.result_label)
         image_processing_group.setFixedHeight(400)
         image_processing_group.setLayout(image_processing_layout)
         layout.addWidget(image_processing_group)
 
-        # Ana Widget
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
 
     def train_model(self):
-        # Eğitim ilerlemesini sıfırla
         self.progress_label.setText("Eğitim Başlatıldı: %0")
         self.progress_bar.setValue(0)
 
@@ -83,10 +75,8 @@ class ChestXRayApp(QMainWindow):
 
 
     def on_training_complete(self, training_results):
-        # Eğitim sonuçlarını al ve sonuç etiketine yaz
         trained_model, train_losses, val_accuracies = training_results
         self.result_label.setText(f"Eğitim tamamlandı. Loss: {train_losses[-1]}, Accuracy: {val_accuracies[-1]}%")
-        # Eğer gerekiyorsa, trained_model ile ek işlemler yapabilirsiniz
 
     def select_image(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Görüntüyü Seç", "", "Image files (*.jpg *.jpeg *.png)")
@@ -101,7 +91,7 @@ class ChestXRayApp(QMainWindow):
         pixmap = QPixmap(file_path)
         scaled_pixmap = pixmap.scaled(self.image_label.width(), self.image_label.height(), Qt.KeepAspectRatio)
         self.image_label.setPixmap(scaled_pixmap)
-        self.test_thread = TestThread(file_path, "vit_chest_xray_model.pth")  # Model yolu burada ayarlanmalıdır.
+        self.test_thread = TestThread(file_path, "vit_chest_xray_model.pth")
         self.test_thread.result_ready.connect(self.show_result)  # Sonucu göstermek için sinyali bağla.
         self.test_thread.start()
 

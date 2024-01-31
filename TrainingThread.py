@@ -16,7 +16,7 @@ class TrainingThread(QThread):
         self.test_dir = test_dir
 
     def run(self):
-        # Veri yükleyicilerini ve ModelTrainer'ı oluşturun
+        # Veri yükleyicilerini ve ModelTrainer'ı oluştur
         train_loader, val_loader, test_loader = prepare_data_loaders(self.train_dir, self.val_dir, self.test_dir)
         model_trainer = ChestXRayModelTrainer(train_loader, val_loader)
 
